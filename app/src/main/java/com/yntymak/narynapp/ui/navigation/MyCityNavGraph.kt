@@ -1,9 +1,11 @@
 package com.yntymak.narynapp.ui.navigation
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +57,8 @@ fun MyCityNavGraph(
     val currentRoute = backStackEntry?.destination?.route
     val isExpanded = windowWidthSizeClass == WindowWidthSizeClass.Expanded
 
-    val canNavigateBack = currentRoute != MyCityRoutes.CATEGORY
+    // Use backStackEntry to make this reactive; previousBackStackEntry is checked after backStackEntry updates
+    val canNavigateBack = backStackEntry != null && navController.previousBackStackEntry != null
 
     val topBarTitle = when (currentRoute) {
         MyCityRoutes.DETAILS -> uiState.selectedPlace?.name ?: "Детали"
@@ -88,10 +91,12 @@ fun MyCityNavGraph(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                windowInsets = WindowInsets.safeDrawing
             )
         },
-        modifier = modifier
+        modifier = modifier,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         NavHost(
             navController = navController,
