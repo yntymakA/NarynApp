@@ -1,13 +1,13 @@
 package com.yntymak.narynapp.ui.navigation
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +48,8 @@ object MyCityRoutes {
 @Composable
 fun MyCityNavGraph(
     windowWidthSizeClass: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
+    isDarkTheme: Boolean = true,
+    onToggleTheme: () -> Unit = {},
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     viewModel: MyCityViewModel = viewModel()
@@ -92,11 +94,17 @@ fun MyCityNavGraph(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
-                windowInsets = WindowInsets.safeDrawing
+                actions = {
+                    IconButton(onClick = onToggleTheme) {
+                        Icon(
+                            imageVector = if (isDarkTheme) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                            contentDescription = if (isDarkTheme) "Светлая тема" else "Тёмная тема"
+                        )
+                    }
+                }
             )
         },
-        modifier = modifier,
-        contentWindowInsets = WindowInsets.safeDrawing
+        modifier = modifier
     ) { innerPadding ->
         NavHost(
             navController = navController,
